@@ -45,7 +45,6 @@ function exportCSV(nom, answers) {
     "Commentaire_matiere",
   ];
   const rows = [header.join(";")];
-
   MATIERES.forEach((m) => {
     const commentMatiere = answers[`comment_${m.id}`] || "";
     m.items.forEach((item, idx) => {
@@ -63,7 +62,6 @@ function exportCSV(nom, answers) {
       rows.push(row.join(";"));
     });
   });
-
   const csv = BOM + rows.join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -158,7 +156,7 @@ function ModalConfirm({ visible, onConfirm, onCancel }) {
             fontWeight: 500,
           }}
         >
-          Recommencer depuis le début ?
+          Recommencer depuis le debut ?
         </p>
         <p
           style={{
@@ -168,7 +166,8 @@ function ModalConfirm({ visible, onConfirm, onCancel }) {
             marginBottom: 24,
           }}
         >
-          Toutes les réponses enregistrées seront définitivement supprimées.
+          Toutes les reponses enregistrees seront definitvement supprimees.
+          Cette action est irreversible.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <button
@@ -196,9 +195,219 @@ function ModalConfirm({ visible, onConfirm, onCancel }) {
 }
 
 // =====================================================================
+// MENU NAVIGATION MATIERES (drawer lateral)
+// =====================================================================
+function NavMenu({
+  visible,
+  onClose,
+  answers,
+  matiereIndex,
+  onGoToMatiere,
+  onGoToBilan,
+  page,
+}) {
+  if (!visible) return null;
+
+  const filledByMatiere = (mId) => {
+    const arr = Array.isArray(answers[mId]) ? answers[mId] : [];
+    return arr.filter((a) => a.note !== null).length;
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 400,
+        display: "flex",
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{ position: "absolute", inset: 0, background: "#0f172acc" }}
+      />
+
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: 320,
+          height: "100%",
+          background: "var(--bg-card)",
+          borderRight: "1px solid var(--border)",
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "auto",
+          zIndex: 1,
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* En-tete */}
+        <div
+          style={{
+            padding: "20px 20px 16px",
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            position: "sticky",
+            top: 0,
+            background: "var(--bg-card)",
+            zIndex: 1,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                color: "var(--accent)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                marginBottom: 2,
+              }}
+            >
+              Navigation
+            </div>
+            <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+              {MATIERES.length} matieres
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--text-muted)",
+              fontSize: 20,
+              lineHeight: 1,
+              padding: 4,
+            }}
+          >
+            x
+          </button>
+        </div>
+
+        {/* Liste des matieres */}
+        <div style={{ padding: "8px 0", flex: 1 }}>
+          {MATIERES.map((m, idx) => {
+            const filled = filledByMatiere(m.id);
+            const total = m.items.length;
+            const isActive = page === "matiere" && idx === matiereIndex;
+            const isComplete = filled === total;
+
+            return (
+              <button
+                key={m.id}
+                onClick={() => {
+                  onGoToMatiere(idx);
+                  onClose();
+                }}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "12px 20px",
+                  background: isActive ? "var(--accent-dim)" : "none",
+                  border: "none",
+                  borderLeft: isActive
+                    ? "2px solid var(--accent)"
+                    : "2px solid transparent",
+                  cursor: "pointer",
+                  transition: "background 0.15s ease",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    gap: 8,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 8,
+                      minWidth: 0,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        color: isActive ? "var(--accent)" : "var(--text-muted)",
+                        flexShrink: 0,
+                        paddingTop: 1,
+                      }}
+                    >
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 13,
+                        color: isActive
+                          ? "var(--text-primary)"
+                          : "var(--text-secondary)",
+                        fontWeight: isActive ? 500 : 400,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {m.titre}
+                    </span>
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 11,
+                      flexShrink: 0,
+                      color: isComplete
+                        ? "var(--success)"
+                        : filled > 0
+                          ? "var(--warning)"
+                          : "var(--text-muted)",
+                      paddingTop: 1,
+                    }}
+                  >
+                    {filled}/{total}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Acces bilan en bas */}
+        <div style={{ padding: 16, borderTop: "1px solid var(--border)" }}>
+          <button
+            className="btn btn-secondary"
+            style={{ width: "100%", fontSize: 13 }}
+            onClick={() => {
+              onGoToBilan();
+              onClose();
+            }}
+          >
+            Voir le bilan
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =====================================================================
 // PAGE ACCUEIL
 // =====================================================================
-function PageAccueil({ onStart, hasSession, sessionNom }) {
+function PageAccueil({
+  onStart,
+  hasSession,
+  sessionNom,
+  progressPct,
+  totalFilled,
+  totalItems,
+}) {
   const [nom, setNom] = useState(sessionNom || "");
   const [erreur, setErreur] = useState(false);
 
@@ -215,12 +424,12 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
       <div style={{ paddingTop: 16, marginBottom: 32 }}>
         <div className="section-label">Bachelor Fullstack · B2 · 2025-2026</div>
         <h1 className="page-title">
-          Auto-évaluation
+          Auto-evaluation
           <br />
-          de compétences
+          de competences
         </h1>
         <p className="page-subtitle">
-          13 matières · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
+          13 matieres · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
           au total. Compter entre 20 et 30 minutes.
         </p>
       </div>
@@ -238,20 +447,56 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
               marginBottom: 6,
             }}
           >
-            Session en cours
+            Session en cours — {sessionNom}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 8,
+            }}
+          >
+            <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+              {totalFilled} / {totalItems} items renseignes
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 13,
+                color: "var(--success)",
+              }}
+            >
+              {progressPct}%
+            </span>
+          </div>
+          <div
+            style={{
+              height: 4,
+              background: "var(--border)",
+              borderRadius: 2,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${progressPct}%`,
+                background: "var(--success)",
+                borderRadius: 2,
+                transition: "width 0.4s ease",
+              }}
+            />
           </div>
           <p
             style={{
-              fontSize: 13,
-              color: "var(--text-secondary)",
-              lineHeight: 1.6,
+              fontSize: 12,
+              color: "var(--text-muted)",
+              marginTop: 10,
+              lineHeight: 1.5,
             }}
           >
-            Une progression a été retrouvée pour{" "}
-            <strong style={{ color: "var(--text-primary)" }}>
-              {sessionNom}
-            </strong>
-            . En cliquant sur "Continuer", vous reprendrez là où vous en étiez.
+            Reprendre la ou vous en etiez en cliquant sur "Continuer".
           </p>
         </div>
       )}
@@ -265,7 +510,7 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
             marginBottom: 10,
           }}
         >
-          À lire avant de commencer
+          A lire avant de commencer
         </div>
         <p
           style={{
@@ -274,17 +519,16 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
             lineHeight: 1.7,
           }}
         >
-          Cet outil est strictement pédagogique. Il n'a aucune incidence sur les
-          notes ni sur la validation de l'année. Les réponses sont
+          Cet outil est strictement pedagogique. Il n'a aucune incidence sur les
+          notes ni sur la validation de l'annee. Les reponses sont
           confidentielles et ne sont accessibles qu'au class-manager de la
-          promotion. Il n'y a pas de bonne ou de mauvaise réponse : l'honnêteté
-          est la seule chose qui rende cet exercice utile.
+          promotion. Il n'y a pas de bonne ou de mauvaise reponse.
         </p>
       </div>
 
       <div className="card" style={{ marginBottom: 24 }}>
         <div className="section-label" style={{ marginBottom: 12 }}>
-          Légende des niveaux
+          Legende des niveaux
         </div>
         <div className="legend-card">
           {NIVEAUX.map((n) => (
@@ -298,7 +542,7 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
 
       <div className="card">
         <label className="input-label" htmlFor="nom-input">
-          Nom et prénom
+          Nom et prenom
         </label>
         <input
           id="nom-input"
@@ -315,14 +559,14 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
         />
         {erreur && (
           <p style={{ fontSize: 12, color: "var(--danger)", marginTop: 6 }}>
-            Merci de renseigner le nom et prénom avant de continuer.
+            Merci de renseigner le nom et prenom avant de continuer.
           </p>
         )}
         <div className="nav-row">
           <button className="btn btn-primary" onClick={handleStart}>
             {hasSession
-              ? "Continuer l'auto-évaluation"
-              : "Commencer l'auto-évaluation"}
+              ? "Continuer l'auto-evaluation"
+              : "Commencer l'auto-evaluation"}
           </button>
         </div>
       </div>
@@ -331,7 +575,7 @@ function PageAccueil({ onStart, hasSession, sessionNom }) {
 }
 
 // =====================================================================
-// PAGE MATIÈRE
+// PAGE MATIERE
 // =====================================================================
 function PageMatiere({
   matiere,
@@ -349,30 +593,42 @@ function PageMatiere({
   const filled = matiereAnswers.filter((a) => a.note !== null).length;
   const total = matiere.items.length;
   const itemRefs = useRef([]);
+  const [filtreNonRepondus, setFiltreNonRepondus] = useState(false);
 
   const legendeActive = (itemIdx) => {
     const note = matiereAnswers[itemIdx]?.note;
-    if (!note) return "Sélectionner un niveau";
+    if (!note) return "Selectionner un niveau";
     return NIVEAUX.find((n) => n.val === note)?.label || "";
   };
 
   const handleNote = (itemIdx, val) => {
     onAnswer(matiere.id, itemIdx, "note", val);
-    // Scroll vers l'item suivant s'il existe
-    const nextRef = itemRefs.current[itemIdx + 1];
-    if (nextRef) {
-      setTimeout(() => {
+    const updatedAnswers = matiereAnswers.map((a, i) =>
+      i === itemIdx ? { ...a, note: val } : a,
+    );
+    const restants = updatedAnswers.filter((a) => a.note === null).length;
+    if (restants === 0) setFiltreNonRepondus(false);
+
+    setTimeout(() => {
+      if (filtreNonRepondus) return;
+      const nextUnanswered = matiereAnswers.findIndex(
+        (a, i) => i > itemIdx && a.note === null,
+      );
+      const targetIdx = nextUnanswered !== -1 ? nextUnanswered : itemIdx + 1;
+      const nextRef = itemRefs.current[targetIdx];
+      if (nextRef)
         nextRef.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 120);
-    }
+    }, 120);
   };
 
-  // Raccourcis clavier 1-5 sur l'item actif (le premier sans réponse)
+  // Raccourcis clavier 1-5, ignorer si focus dans un champ texte
   useEffect(() => {
     const firstUnanswered = matiereAnswers.findIndex((a) => a.note === null);
     const activeIdx = firstUnanswered === -1 ? null : firstUnanswered;
 
     const handleKey = (e) => {
+      if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT")
+        return;
       const n = parseInt(e.key);
       if (n >= 1 && n <= 5 && activeIdx !== null) {
         handleNote(activeIdx, n);
@@ -382,19 +638,58 @@ function PageMatiere({
     return () => window.removeEventListener("keydown", handleKey);
   }, [matiereAnswers]); // eslint-disable-line
 
+  const nonRepondus = matiereAnswers.filter((a) => a.note === null).length;
+  const itemsAffiches = filtreNonRepondus
+    ? matiere.items
+        .map((item, idx) => ({ item, idx }))
+        .filter(({ idx }) => matiereAnswers[idx]?.note === null)
+    : matiere.items.map((item, idx) => ({ item, idx }));
+
   return (
     <div className="main-content">
       <div style={{ marginBottom: 20 }}>
         <div className="section-label">
-          Matière {matiereIndex + 1} sur {MATIERES.length}
+          Matiere {matiereIndex + 1} sur {MATIERES.length}
         </div>
         <h2 className="matiere-title">{matiere.titre}</h2>
-        <div className="matiere-counter">
-          {filled}/{total} items renseignés
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
+          <div className="matiere-counter">
+            {filled}/{total} items renseignes
+          </div>
+          {nonRepondus > 0 && (
+            <button
+              onClick={() => setFiltreNonRepondus((f) => !f)}
+              style={{
+                background: filtreNonRepondus
+                  ? "var(--warning)"
+                  : "transparent",
+                border: `1px solid ${filtreNonRepondus ? "var(--warning)" : "var(--border)"}`,
+                borderRadius: "var(--radius-sm)",
+                color: filtreNonRepondus ? "var(--bg)" : "var(--text-muted)",
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                padding: "4px 10px",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              {filtreNonRepondus
+                ? "Afficher tout"
+                : `${nonRepondus} sans reponse`}
+            </button>
+          )}
         </div>
       </div>
 
-      {matiere.items.map((item, idx) => {
+      {itemsAffiches.map(({ item, idx }) => {
         const a = matiereAnswers[idx] || {};
         return (
           <div
@@ -457,9 +752,9 @@ function PageMatiere({
               }
             >
               <div className={`checkbox-box ${a.entreprise ? "checked" : ""}`}>
-                {a.entreprise && <span className="checkbox-check">✓</span>}
+                {a.entreprise && <span className="checkbox-check">v</span>}
               </div>
-              <span className="checkbox-label">Pratiqué en entreprise</span>
+              <span className="checkbox-label">Pratique en entreprise</span>
             </div>
 
             <label className="obs-label" htmlFor={`obs-${matiere.id}-${idx}`}>
@@ -479,13 +774,27 @@ function PageMatiere({
         );
       })}
 
+      {filtreNonRepondus && nonRepondus === 0 && (
+        <div
+          className="card"
+          style={{
+            textAlign: "center",
+            color: "var(--success)",
+            fontSize: 14,
+            marginBottom: 16,
+          }}
+        >
+          Tous les items sont renseignes !
+        </div>
+      )}
+
       <div className="comment-block">
         <div className="comment-block-label">
-          Commentaire général sur cette matière (facultatif)
+          Commentaire general sur cette matiere (facultatif)
         </div>
         <textarea
           className="obs-textarea"
-          placeholder="Remarque générale sur la matière..."
+          placeholder="Remarque generale sur la matiere..."
           value={answers[`comment_${matiere.id}`] || ""}
           onChange={(e) =>
             onAnswer(`comment_${matiere.id}`, null, null, e.target.value)
@@ -496,7 +805,7 @@ function PageMatiere({
 
       <div className="nav-row">
         <button className="btn btn-primary" onClick={onNext}>
-          {isLast ? "Voir le bilan" : "Matière suivante"}
+          {isLast ? "Voir le bilan" : "Matiere suivante"}
         </button>
         {!isFirst && (
           <button className="btn btn-secondary" onClick={onPrev}>
@@ -564,8 +873,8 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
   return (
     <div className="main-content">
       <div style={{ paddingTop: 16, marginBottom: 24 }}>
-        <div className="section-label">Résultats</div>
-        <h2 className="matiere-title">Bilan de l'auto-évaluation</h2>
+        <div className="section-label">Resultats</div>
+        <h2 className="matiere-title">Bilan de l'auto-evaluation</h2>
         <p
           style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 4 }}
         >
@@ -578,7 +887,7 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
           <span className="stat-num">
             {totalFilled}/{totalItems}
           </span>
-          <span className="stat-label">items renseignés</span>
+          <span className="stat-label">items renseignes</span>
         </div>
         <div className="stat-card">
           <span className="stat-num">{moyenneGlobale()}</span>
@@ -600,9 +909,8 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
           }}
         >
           <div className="section-label" style={{ marginBottom: 0 }}>
-            Score par matière
+            Score par matiere
           </div>
-          {/* Seuil visuel */}
           <div
             style={{
               display: "flex",
@@ -616,10 +924,9 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
             <div
               style={{
                 width: 20,
-                height: 2,
-                background: "var(--text-muted)",
-                opacity: 0.5,
+                height: 1,
                 borderTop: "1px dashed var(--text-muted)",
+                opacity: 0.6,
               }}
             />
             seuil acquis (3/5)
@@ -629,7 +936,7 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
         {MATIERES.map((m, mIdx) => {
           const avg = moyenneMatiere(m.id);
           const pct = avg ? (avg / 5) * 100 : 0;
-          const seuilPct = (3 / 5) * 100; // 60%
+          const seuilPct = 60;
           return (
             <div className="bilan-matiere" key={m.id}>
               <div className="bilan-matiere-header">
@@ -649,7 +956,6 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
                     textDecorationColor: "var(--border)",
                     textUnderlineOffset: 3,
                   }}
-                  title={`Retourner à "${m.titre}"`}
                 >
                   {m.titre}
                 </button>
@@ -662,7 +968,6 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
                   className="bilan-bar-fill"
                   style={{ width: `${pct}%`, background: barColor(avg) }}
                 />
-                {/* Ligne seuil à 3/5 */}
                 <div
                   style={{
                     position: "absolute",
@@ -687,8 +992,8 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
             lineHeight: 1.5,
           }}
         >
-          Cliquer sur le nom d'une matière pour y retourner et modifier des
-          réponses.
+          Cliquer sur le nom d'une matiere pour y retourner et modifier des
+          reponses.
         </p>
       </div>
 
@@ -700,8 +1005,8 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
             lineHeight: 1.7,
           }}
         >
-          Ce bilan n'est visible que sur cet écran. Pour le transmettre au
-          class-manager, télécharger le fichier CSV ci-dessous et l'envoyer par
+          Ce bilan n'est visible que sur cet ecran. Pour le transmettre au
+          class-manager, telecharger le fichier CSV ci-dessous et l'envoyer par
           email.
         </p>
       </div>
@@ -711,17 +1016,17 @@ function PageBilan({ nom, answers, onPrev, onReset, onGoToMatiere }) {
           className="btn btn-success"
           onClick={() => exportCSV(nom, answers)}
         >
-          Télécharger mes résultats (CSV)
+          Telecharger mes resultats (CSV)
         </button>
         <button className="btn btn-secondary" onClick={onPrev}>
-          Retour à la dernière matière
+          Retour a la derniere matiere
         </button>
         <button
           className="btn btn-secondary"
-          style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}
+          style={{ color: "var(--danger)", borderColor: "var(--danger)" }}
           onClick={onReset}
         >
-          Recommencer depuis le début
+          Recommencer depuis le debut
         </button>
       </div>
     </div>
@@ -740,8 +1045,8 @@ export default function App() {
   const [sessionNom, setSessionNom] = useState("");
   const [toast, setToast] = useState({ visible: false, message: "" });
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showNavMenu, setShowNavMenu] = useState(false);
 
-  // Chargement initial unique depuis localStorage
   useEffect(() => {
     const saved = loadFromStorage();
     if (saved?.answers) {
@@ -752,15 +1057,11 @@ export default function App() {
       if (saved.page && saved.page !== "accueil") {
         setPage(saved.page);
         setMatiereIndex(saved.matiereIndex ?? 0);
-        showToast("Progression restaurée");
-      } else {
-        // On reste sur l'accueil mais on informe qu'une session existe
-        setPage("accueil");
+        showToast("Progression restauree");
       }
     }
   }, []); // eslint-disable-line
 
-  // Sauvegarde automatique à chaque modification
   useEffect(() => {
     saveToStorage({ nom, answers, page, matiereIndex });
   }, [nom, answers, page, matiereIndex]);
@@ -785,7 +1086,6 @@ export default function App() {
     setAnswers((prev) => {
       const next = { ...prev };
       if (itemIdx === null) {
-        // Commentaire matière : stocker dans la clé dédiée, pas dans le tableau d'items
         next[`comment_${mId}`] = value;
       } else {
         const arr = [...(Array.isArray(prev[mId]) ? prev[mId] : [])];
@@ -798,7 +1098,6 @@ export default function App() {
 
   const handleStart = (nomSaisi) => {
     setNom(nomSaisi);
-    // On repart de l'index sauvegardé si même nom, sinon de 0
     const saved = loadFromStorage();
     if (saved?.nom === nomSaisi && saved?.matiereIndex !== undefined) {
       setMatiereIndex(saved.matiereIndex);
@@ -834,9 +1133,12 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
-  const handleReset = () => {
-    setShowResetModal(true);
+  const handleGoToBilan = () => {
+    setPage("bilan");
+    window.scrollTo(0, 0);
   };
+
+  const handleReset = () => setShowResetModal(true);
 
   const confirmReset = () => {
     localStorage.removeItem(STORAGE_KEY);
@@ -861,7 +1163,29 @@ export default function App() {
       {showTopBar && (
         <>
           <div className="top-bar">
-            <span className="top-bar-title">{matiereLabel}</span>
+            <button
+              onClick={() => setShowNavMenu(true)}
+              style={{
+                background: "none",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--text-secondary)",
+                cursor: "pointer",
+                padding: "5px 9px",
+                fontSize: 15,
+                lineHeight: 1,
+                flexShrink: 0,
+              }}
+              title="Navigation entre matieres"
+            >
+              &#9776;
+            </button>
+            <span
+              className="top-bar-title"
+              style={{ flex: 1, margin: "0 10px" }}
+            >
+              {matiereLabel}
+            </span>
             <span className="top-bar-progress">{progressPct}%</span>
           </div>
           <div className="progress-track">
@@ -878,6 +1202,9 @@ export default function App() {
           onStart={handleStart}
           hasSession={hasSession}
           sessionNom={sessionNom}
+          progressPct={progressPct}
+          totalFilled={totalFilled}
+          totalItems={totalItems}
         />
       )}
 
@@ -903,6 +1230,16 @@ export default function App() {
           onGoToMatiere={handleGoToMatiere}
         />
       )}
+
+      <NavMenu
+        visible={showNavMenu}
+        onClose={() => setShowNavMenu(false)}
+        answers={answers}
+        matiereIndex={matiereIndex}
+        onGoToMatiere={handleGoToMatiere}
+        onGoToBilan={handleGoToBilan}
+        page={page}
+      />
 
       <Toast message={toast.message} visible={toast.visible} />
 
