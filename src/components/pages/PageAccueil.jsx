@@ -38,7 +38,7 @@ export default function PageAccueil({
         </h1>
         <p className="page-subtitle">
           13 matieres · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
-          au total. Compter entre 30 et 60 minutes.
+          au total. Compter entre 20 et 30 minutes.
         </p>
       </div>
 
@@ -127,10 +127,10 @@ export default function PageAccueil({
             lineHeight: 1.7,
           }}
         >
-          Cet outil est strictement pedagogique. Il n'a aucune incidence sur les
-          notes ni sur la validation de l'annee. Les reponses sont
+          Cet outil est strictement pédagogique. Il n'a aucune incidence sur les
+          notes ni sur la validation de l'année. Les réponses sont
           confidentielles et ne sont accessibles qu'au class-manager de la
-          promotion. Il n'y a pas de bonne ou de mauvaise reponse.
+          promotion. Il n'y a pas de bonne ou de mauvaise réponse.
         </p>
       </div>
 
