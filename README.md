@@ -1,96 +1,120 @@
-# Auto-évaluation B2 Fullstack 2025-2026
+# Auto-évaluation B2 Fullstack
 
-Formulaire d'auto-évaluation des compétences — Bachelor Fullstack B2 — RNCP 39608.
+> Outil d'auto-évaluation pédagogique pour les étudiants en Bachelor Fullstack B2 — ESNL, École Supérieure du Numérique des Landes.
 
-## Pour les apprenants
-
-Accéder au formulaire via l'URL fournie par le class-manager.
-Une fois le formulaire complété, cliquer sur "Télécharger mes résultats (CSV)"
-et envoyer le fichier par email au class-manager.
+**[Accéder à l'application →](https://trentindev.github.io/auto-evaluation-b2)**
 
 ---
 
-## Pour le class-manager — Déploiement sur GitHub Pages
+## But
 
-### Étape 1 — Créer un compte GitHub
+En fin d'année, chaque étudiant B2 fait le point sur ses compétences. L'idée est simple : parcourir 125 items répartis sur 13 matières, se noter honnêtement de 1 à 5, et exporter le résultat en CSV pour le transmettre au class-manager.
 
-Se rendre sur https://github.com et créer un compte si ce n'est pas déjà fait.
+Ce n'est pas une évaluation notée. C'est un outil de réflexion sur son propre parcours — pour identifier ce qu'on maîtrise, ce qu'on a pratiqué en entreprise, et ce qu'il reste à consolider.
 
-### Étape 2 — Créer un nouveau dépôt
+---
 
-- Cliquer sur le bouton "+" en haut à droite puis "New repository"
-- Nommer le dépôt : `auto-evaluation-b2`
-- Laisser le dépôt en "Public"
-- Ne pas cocher "Add a README file"
-- Cliquer sur "Create repository"
+## Fonctionnement
 
-### Étape 3 — Installer les outils nécessaires
+L'application guide l'étudiant matière par matière. Pour chaque compétence, il choisit un niveau sur une échelle de 1 à 5 :
 
-Installer Node.js depuis https://nodejs.org (version LTS recommandée).
-Vérifier l'installation en ouvrant un terminal et en tapant :
+| Niveau | Signification                                       |
+| ------ | --------------------------------------------------- |
+| **1**  | Non acquis — je ne sais pas encore le faire         |
+| **2**  | Vu en cours — je l'ai fait avec de l'aide           |
+| **3**  | Pratiqué seul — mais pas encore fluide              |
+| **4**  | Fluide seul — dans un contexte que je connais       |
+| **5**  | Fluide dans tout contexte — je pourrais l'enseigner |
 
-```
-node --version
-npm --version
-```
+Il peut aussi indiquer si la compétence a été pratiquée en entreprise, ajouter une observation par item, et laisser un commentaire général sur chaque matière.
 
-Installer Git depuis https://git-scm.com si ce n'est pas déjà fait.
+---
 
-### Étape 4 — Configurer le projet
+## Les 13 matières couvertes
 
-Ouvrir un terminal dans le dossier du projet et exécuter :
+1. Applications web dynamiques et interactives
+2. Développement d'interfaces front-end
+3. Ergonomie, UI et accessibilité
+4. Architectures sécurisées — Cloud et réseaux
+5. Administration d'hébergement web
+6. Administration Linux
+7. Bases de données SQL et NoSQL
+8. Conception d'API Web
+9. Frameworks et bibliothèques front-end
+10. Initiation à la sauvegarde et au versioning
+11. Versioning avec Git — niveau avancé
+12. Initiation à l'étude d'un projet numérique — MOA
+13. Méthodes agiles
 
-```
+---
+
+## Ce que l'application fait bien
+
+**Progression sauvegardée automatiquement.** Chaque réponse est enregistrée dans le localStorage. L'étudiant peut fermer l'onglet, revenir le lendemain — ses réponses l'attendent. Un indicateur de progression s'affiche dès la page d'accueil.
+
+**Navigation libre entre les matières.** Un menu latéral permet d'accéder à n'importe quelle matière à tout moment, avec le statut de complétion de chacune visible d'un coup d'œil.
+
+**Filtre "items sans réponse".** Sur chaque matière, un bouton permet d'afficher uniquement les items non encore renseignés — utile pour finir rapidement sans tout rescroller.
+
+**Bilan visuel clair.** En fin de parcours, un tableau de bord affiche le score moyen par matière avec une barre colorée et un seuil visuel à 3/5 (niveau "acquis"). Chaque matière est cliquable pour y retourner directement.
+
+**Export CSV propre.** Un fichier nommé automatiquement `auto_evaluation_NomPrenom_B2_2025.csv` est généré en UTF-8 avec BOM, prêt à être ouvert dans Excel ou transmis par email. Il inclut les commentaires par matière.
+
+**Raccourcis clavier.** Sur desktop, les touches 1 à 5 notent directement le premier item sans réponse de la matière courante.
+
+**Compatible smartphone.** Design mobile-first, thème sombre, police DM Sans — confortable pour une session de 20 à 30 minutes sur n'importe quel appareil.
+
+---
+
+## Stack technique
+
+- **React** (Create React App)
+- **CSS custom** — thème sombre, mobile-first, sans librairie externe
+- **localStorage** — persistance côté client, aucune donnée envoyée sur un serveur
+- **GitHub Pages** — hébergement statique
+
+---
+
+## Lancer le projet en local
+
+```bash
+git clone https://github.com/trentindev/auto-evaluation-b2.git
+cd auto-evaluation-b2
 npm install
+npm start
 ```
 
-Ouvrir le fichier `package.json` et modifier la ligne `"homepage"` :
+## Déployer sur GitHub Pages
 
-```json
-"homepage": "https://VOTRE_NOM_UTILISATEUR.github.io/auto-evaluation-b2"
-```
-
-Remplacer `VOTRE_NOM_UTILISATEUR` par le nom d'utilisateur GitHub exact.
-
-### Étape 5 — Initialiser le dépôt Git local
-
-Dans le terminal, exécuter les commandes suivantes une par une :
-
-```
-git init
-git add .
-git commit -m "Initial commit - auto-évaluation B2"
-git branch -M main
-git remote add origin https://github.com/VOTRE_NOM_UTILISATEUR/auto-evaluation-b2.git
-git push -u origin main
-```
-
-### Étape 6 — Déployer sur GitHub Pages
-
-```
+```bash
 npm run deploy
 ```
 
-Cette commande construit l'application et la publie automatiquement
-sur la branche `gh-pages` du dépôt.
+---
 
-### Étape 7 — Activer GitHub Pages
-
-- Aller dans le dépôt sur GitHub
-- Cliquer sur "Settings" (engrenage)
-- Dans le menu gauche, cliquer sur "Pages"
-- Dans "Branch", sélectionner `gh-pages` puis `/ (root)`
-- Cliquer sur "Save"
-
-L'URL du formulaire sera disponible en quelques minutes à l'adresse :
-`https://VOTRE_NOM_UTILISATEUR.github.io/auto-evaluation-b2`
-
-### Mettre à jour le formulaire
-
-Si des modifications sont apportées au formulaire, exécuter :
+## Structure du projet
 
 ```
-npm run deploy
+auto-evaluation-b2/
+├── public/
+│   └── index.html
+├── src/
+│   ├── index.js        # Point d'entrée React
+│   ├── index.css       # Styles globaux, thème sombre
+│   ├── App.js          # Logique complète de l'application
+│   └── data.js         # Matières et items — seul fichier à modifier pour le contenu
+├── package.json
+└── README.md
 ```
 
-La mise à jour est publiée automatiquement.
+Pour modifier le contenu du formulaire (ajouter une matière, changer un item), **seul `data.js` est à éditer**.
+
+---
+
+## Contexte pédagogique
+
+Cet outil est strictement pédagogique. Il n'a aucune incidence sur les notes ni sur la validation de l'année. Les réponses sont confidentielles et ne sont accessibles qu'au class-manager de la promotion. L'honnêteté est la seule chose qui rende l'exercice utile.
+
+---
+
+_Développé pour l'ESNL — École Supérieure du Numérique des Landes · Bachelor Fullstack B2 · 2025-2026_

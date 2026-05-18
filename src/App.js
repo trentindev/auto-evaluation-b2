@@ -166,7 +166,7 @@ function ModalConfirm({ visible, onConfirm, onCancel }) {
             marginBottom: 24,
           }}
         >
-          Toutes les reponses enregistrees seront definitvement supprimees.
+          Toutes les réponses enregistrées seront definitvement supprimées.
           Cette action est irreversible.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -438,7 +438,7 @@ function PageAccueil({
         <h1 className="page-title">
           Auto-evaluation
           <br />
-          de competences
+          de compétences
         </h1>
         <p className="page-subtitle">
           13 matieres · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
