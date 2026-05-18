@@ -38,7 +38,7 @@ export default function PageAccueil({
         </h1>
         <p className="page-subtitle">
           13 matieres · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
-          au total. Compter entre 20 et 30 minutes.
+          au total. Compter entre 30 et 60 minutes.
         </p>
       </div>
 
