@@ -32,7 +32,7 @@ export default function PageAccueil({
         </div>
         <div className="section-label">Bachelor Fullstack · B2 · 2025-2026</div>
         <h1 className="page-title">
-          Auto-evaluation
+          Auto-évaluation
           <br />
           de competences
         </h1>
