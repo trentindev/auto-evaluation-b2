@@ -8,6 +8,7 @@ export default function NavMenu({
   matiereIndex,
   onGoToMatiere,
   onGoToBilan,
+  onReset,
   page,
 }) {
   if (!visible) return null;
@@ -178,8 +179,16 @@ export default function NavMenu({
           })}
         </div>
 
-        {/* Acces bilan en bas */}
-        <div style={{ padding: 16, borderTop: "1px solid var(--border)" }}>
+        {/* Actions en bas */}
+        <div
+          style={{
+            padding: 16,
+            borderTop: "1px solid var(--border)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
           <button
             className="btn btn-secondary"
             style={{ width: "100%", fontSize: 13 }}
@@ -189,6 +198,21 @@ export default function NavMenu({
             }}
           >
             Voir le bilan
+          </button>
+          <button
+            className="btn btn-secondary"
+            style={{
+              width: "100%",
+              fontSize: 13,
+              color: "var(--danger)",
+              borderColor: "var(--danger)",
+            }}
+            onClick={() => {
+              onClose();
+              onReset();
+            }}
+          >
+            Recommencer depuis le debut
           </button>
         </div>
       </div>

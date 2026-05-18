@@ -223,6 +223,7 @@ export default function App() {
         matiereIndex={matiereIndex}
         onGoToMatiere={handleGoToMatiere}
         onGoToBilan={handleGoToBilan}
+        onReset={handleReset}
         page={page}
       />
 
