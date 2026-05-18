@@ -16,6 +16,17 @@ function initAnswers() {
   return a;
 }
 
+// Helper : texte et aide d'un item (compatible string et objet)
+function itemTexte(item) {
+  return typeof item === "string" ? item : item.texte;
+}
+function itemAide(item) {
+  return typeof item === "string" ? null : item.aide || null;
+}
+function isUrl(str) {
+  return typeof str === "string" && str.startsWith("http");
+}
+
 function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -53,7 +64,7 @@ function exportCSV(nom, answers) {
         `"${nom}"`,
         `"${m.titre}"`,
         idx + 1,
-        `"${item.replace(/"/g, '""')}"`,
+        `"${itemTexte(item).replace(/"/g, '""')}"`,
         a.note ?? "",
         a.entreprise ? "Oui" : "Non",
         `"${(a.observation || "").replace(/"/g, '""')}"`,
@@ -166,7 +177,7 @@ function ModalConfirm({ visible, onConfirm, onCancel }) {
             marginBottom: 24,
           }}
         >
-          Toutes les réponses enregistrées seront definitvement supprimées.
+          Toutes les reponses enregistrees seront definitvement supprimees.
           Cette action est irreversible.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -438,7 +449,7 @@ function PageAccueil({
         <h1 className="page-title">
           Auto-evaluation
           <br />
-          de compétences
+          de competences
         </h1>
         <p className="page-subtitle">
           13 matieres · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
@@ -606,6 +617,7 @@ function PageMatiere({
   const total = matiere.items.length;
   const itemRefs = useRef([]);
   const [filtreNonRepondus, setFiltreNonRepondus] = useState(false);
+  const [aideOuverte, setAideOuverte] = useState(null); // index de l'item dont l'aide est ouverte
 
   const legendeActive = (itemIdx) => {
     const note = matiereAnswers[itemIdx]?.note;
@@ -760,9 +772,74 @@ function PageMatiere({
               >
                 {idx + 1}.
               </span>
-              <p className="item-text" style={{ margin: 0 }}>
-                {item}
-              </p>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p className="item-text" style={{ margin: 0 }}>
+                  {itemTexte(item)}
+                </p>
+                {/* Panneau d'aide */}
+                {itemAide(item) && (
+                  <div style={{ marginTop: 8 }}>
+                    <button
+                      onClick={() =>
+                        setAideOuverte(aideOuverte === idx ? null : idx)
+                      }
+                      style={{
+                        background:
+                          aideOuverte === idx
+                            ? "var(--accent-dim)"
+                            : "transparent",
+                        border:
+                          "1px solid " +
+                          (aideOuverte === idx
+                            ? "var(--accent)"
+                            : "var(--border)"),
+                        borderRadius: "var(--radius-sm)",
+                        color:
+                          aideOuverte === idx
+                            ? "var(--accent)"
+                            : "var(--text-muted)",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        padding: "3px 9px",
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      {aideOuverte === idx ? "Fermer" : "? Aide"}
+                    </button>
+                    {aideOuverte === idx && (
+                      <div
+                        style={{
+                          marginTop: 8,
+                          padding: "12px 14px",
+                          background: "var(--accent-dim)",
+                          border: "1px solid var(--accent)",
+                          borderRadius: "var(--radius-sm)",
+                          fontSize: 13,
+                          color: "var(--text-secondary)",
+                          lineHeight: 1.65,
+                        }}
+                      >
+                        {isUrl(itemAide(item)) ? (
+                          <a
+                            href={itemAide(item)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: "var(--accent)",
+                              wordBreak: "break-all",
+                            }}
+                          >
+                            {itemAide(item)}
+                          </a>
+                        ) : (
+                          itemAide(item)
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="rating-grid">
