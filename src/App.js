@@ -159,7 +159,7 @@ export default function App() {
                 flexShrink: 0,
                 fontWeight: 700,
               }}
-              title="Navigation entre matieres"
+              title="Navigation entre matières"
             >
               &#9776;
             </button>

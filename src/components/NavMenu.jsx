@@ -212,7 +212,7 @@ export default function NavMenu({
               onReset();
             }}
           >
-            Recommencer depuis le debut
+            Recommencer depuis le début
           </button>
         </div>
       </div>

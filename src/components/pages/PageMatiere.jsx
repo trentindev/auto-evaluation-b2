@@ -96,7 +96,7 @@ export default function PageMatiere({
             onClick={onPrev}
             style={{ flex: 1, padding: "8px 12px", fontSize: 13 }}
           >
-            &larr; Precedente
+            &larr; Précedente
           </button>
         ) : (
           <div style={{ flex: 1 }} />
@@ -315,14 +315,14 @@ export default function PageMatiere({
             marginBottom: 16,
           }}
         >
-          Tous les items sont renseignes !
+          Tous les items sont renseignés !
         </div>
       )}
 
       {/* Commentaire general matiere */}
       <div className="comment-block">
         <div className="comment-block-label">
-          Commentaire general sur cette matiere (facultatif)
+          Commentaire général sur cette matière (facultatif)
         </div>
         <textarea
           className="obs-textarea"

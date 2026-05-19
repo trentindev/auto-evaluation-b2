@@ -46,7 +46,7 @@ export default function ModalConfirm({ visible, onConfirm, onCancel }) {
             fontWeight: 500,
           }}
         >
-          Recommencer depuis le debut ?
+          Recommencer depuis le début ?
         </p>
         <p
           style={{
@@ -56,7 +56,7 @@ export default function ModalConfirm({ visible, onConfirm, onCancel }) {
             marginBottom: 24,
           }}
         >
-          Toutes les reponses enregistrees seront definitivement supprimees.
+          Toutes les réponses enregistées seront définitivement supprimées.
           Cette action est irreversible.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

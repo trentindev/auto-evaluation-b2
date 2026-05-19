@@ -34,11 +34,11 @@ export default function PageAccueil({
         <h1 className="page-title">
           Auto-évaluation
           <br />
-          de competences
+          de compétences
         </h1>
         <p className="page-subtitle">
-          13 matieres · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
-          au total. Compter entre 20 et 30 minutes.
+          13 matières · {MATIERES.reduce((s, m) => s + m.items.length, 0)} items
+          au total. Compter entre 3O et 45 minutes.
         </p>
       </div>
 
@@ -66,7 +66,7 @@ export default function PageAccueil({
             }}
           >
             <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-              {totalFilled} / {totalItems} items renseignes
+              {totalFilled} / {totalItems} items renseignés
             </span>
             <span
               style={{
@@ -104,7 +104,7 @@ export default function PageAccueil({
               lineHeight: 1.5,
             }}
           >
-            Reprendre la ou vous en etiez en cliquant sur "Continuer".
+            Reprendre là ou vous en étiez en cliquant sur "Continuer"
           </p>
         </div>
       )}
@@ -127,16 +127,17 @@ export default function PageAccueil({
             lineHeight: 1.7,
           }}
         >
-          Cet outil est strictement pédagogique. Il n'a aucune incidence sur les
-          notes ni sur la validation de l'année. Les réponses sont
-          confidentielles et ne sont accessibles qu'au class-manager de la
-          promotion. Il n'y a pas de bonne ou de mauvaise réponse.
+          Outil strictement pédagogique | Sans impact sur vos notes ou votre
+          année. Vos réponses sont confidentielles et réservées au
+          class-manager. Il n’y a pas de bonne ou de mauvaise réponse : c’est
+          l’honnêteté de vos retours qui permettra de cibler les vraies
+          priorités et d'améliorer concrètement votre formation.
         </p>
       </div>
 
       <div className="card" style={{ marginBottom: 24 }}>
         <div className="section-label" style={{ marginBottom: 12 }}>
-          Legende des niveaux
+          Légende des niveaux
         </div>
         <div className="legend-card">
           {NIVEAUX.map((n) => (
@@ -150,7 +151,7 @@ export default function PageAccueil({
 
       <div className="card">
         <label className="input-label" htmlFor="nom-input">
-          Nom et prenom
+          Nom et prénom
         </label>
         <input
           id="nom-input"
@@ -167,7 +168,7 @@ export default function PageAccueil({
         />
         {erreur && (
           <p style={{ fontSize: 12, color: "var(--danger)", marginTop: 6 }}>
-            Merci de renseigner le nom et prenom avant de continuer.
+            Merci de renseigner le nom et le prénom avant de continuer.
           </p>
         )}
         <div className="nav-row">

@@ -168,8 +168,8 @@ export default function PageBilan({
             lineHeight: 1.5,
           }}
         >
-          Cliquer sur le nom d'une matiere pour y retourner et modifier des
-          reponses.
+          Cliquer sur le nom d'une matière pour y retourner et modifier des
+          rèponses.
         </p>
       </div>
 
@@ -181,8 +181,8 @@ export default function PageBilan({
             lineHeight: 1.7,
           }}
         >
-          Ce bilan n'est visible que sur cet ecran. Pour le transmettre au
-          class-manager, telecharger le fichier CSV ci-dessous et l'envoyer par
+          Ce bilan n'est visible que sur cet écran. Pour le transmettre au
+          class-manager, télécharger le fichier CSV ci-dessous et envoyer le par
           email.
         </p>
       </div>
@@ -193,17 +193,17 @@ export default function PageBilan({
           className="btn btn-success"
           onClick={() => exportCSV(nom, answers)}
         >
-          Telecharger mes resultats (CSV)
+          Télécharger mes résultats (CSV)
         </button>
         <button className="btn btn-secondary" onClick={onPrev}>
-          Retour a la derniere matiere
+          Retour à la derniere matière
         </button>
         <button
           className="btn btn-secondary"
           style={{ color: "var(--danger)", borderColor: "var(--danger)" }}
           onClick={onReset}
         >
-          Recommencer depuis le debut
+          Recommencer depuis le début ⚠️
         </button>
       </div>
     </div>
